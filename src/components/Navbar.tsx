@@ -1,8 +1,11 @@
+// src/components/Navbar.tsx
 import React, { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { createPortal } from 'react-dom'
 import logo from '../assets/similater long logo 1.png'
 import LoginModal from './LoginModal'
+import { useAuth } from '../context/authContext'
+import { toast } from 'react-toastify'
 
 type NavLink = {
     name: string
@@ -18,9 +21,20 @@ const navLinks: NavLink[] = [
 
 const Navbar: React.FC = () => {
     const [showLoginModal, setShowLoginModal] = useState<boolean>(false)
+    const { isAuthenticated, logout } = useAuth()
 
     const handleLoginModal = () => {
         setShowLoginModal((prevState) => !prevState)
+    }
+
+    const handleLogout = async () => {
+        try {
+            await logout()
+            toast.success('Successfully logged out!')
+        } catch (error) {
+            toast.error('Logout failed. Please try again.')
+            console.error('Logout failed:', error)
+        }
     }
 
     return (
@@ -43,12 +57,21 @@ const Navbar: React.FC = () => {
                         ))}
                     </div>
 
-                    <button
-                        className="cta-btn custom-transition"
-                        onClick={handleLoginModal}
-                    >
-                        login
-                    </button>
+                    {isAuthenticated ? (
+                        <button
+                            className="cta-btn custom-transition"
+                            onClick={handleLogout}
+                        >
+                            Logout
+                        </button>
+                    ) : (
+                        <button
+                            className="cta-btn custom-transition"
+                            onClick={handleLoginModal}
+                        >
+                            Login
+                        </button>
+                    )}
                 </div>
             </nav>
 

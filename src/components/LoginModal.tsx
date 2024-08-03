@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
 import { IoClose } from 'react-icons/io5'
+import { useAuth } from '../context/authContext'
+import { toast } from 'react-toastify'
 
 type LoginModalProps = {
     onClose: () => void
@@ -9,11 +11,17 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
     const [email, setEmail] = useState<string>('')
     const [password, setPassword] = useState<string>('')
     const [showPassword, setShowPassword] = useState<boolean>(false)
+    const { login } = useAuth()
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        console.log({ email, password })
-        onClose()
+        try {
+            await login(email, password)
+            toast.success('Successfully logged in!')
+            onClose()
+        } catch (error) {
+            toast.error('Login failed! Invalid credentials.')
+        }
     }
 
     return (
@@ -35,7 +43,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
                     <input
                         id="email"
                         type="email"
-                        className="mt-1 w-full rounded-md border border-primary-dark/25 p-2"
+                        className="mt-1 w-full rounded-md border p-2"
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         placeholder="Email Address"
@@ -45,7 +53,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
                     <input
                         id="password"
                         type={showPassword ? 'text' : 'password'}
-                        className="mt-1 w-full rounded-md border border-primary-dark/25 p-2"
+                        className="mt-1 w-full rounded-md border p-2"
                         value={password}
                         onChange={(e) => setPassword(e.target.value)}
                         placeholder="Password"
@@ -72,7 +80,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
 
                         <a
                             href="#"
-                            className="custom-transision text-sm hover:underline"
+                            className="custom-transition text-sm hover:underline"
                         >
                             Lost Your Password?
                         </a>
@@ -80,7 +88,7 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
 
                     <button
                         type="submit"
-                        className="cta-btn custom-transtion mt-3 w-fit"
+                        className="cta-btn custom-transition mt-3 w-fit"
                     >
                         Login
                     </button>
