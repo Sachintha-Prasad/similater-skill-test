@@ -6,6 +6,7 @@
     width: 100%;
     padding: 10px;
     border-radius: 8px;
+
     font-size: 16px;
 }
 
@@ -59,7 +60,6 @@
 
 .react-datepicker__day--today {
     font-weight: bold;
-    color: #ff6347;
 }
 
 .react-datepicker__day--outside-month {
