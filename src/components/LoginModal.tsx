@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { IoClose } from 'react-icons/io5'
 import { useAuth } from '../context/authContext'
-import { toast } from 'react-toastify'
 
 type LoginModalProps = {
     onClose: () => void
@@ -15,13 +14,8 @@ const LoginModal: React.FC<LoginModalProps> = ({ onClose }) => {
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        try {
-            await login(email, password)
-            toast.success('Successfully logged in!')
-            onClose()
-        } catch (error) {
-            toast.error('Login failed! Invalid credentials.')
-        }
+        await login(email, password)
+        onClose()
     }
 
     return (
